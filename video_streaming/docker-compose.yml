@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  ffmpeg:
+    image: linuxserver/ffmpeg
+    volumes:
+      - "/home/edsols/Desktop/Project/Docker/video_streaming/video:/input"
+      - "/home/edsols/Desktop/Project/Docker/video_streaming/hls:/output"
+    command: >
+      -y -i /input/source.mp4 -preset slow -g 48 -sc_threshold 0 -map 0:0 -map 0:1 -map 0:0 -map 0:1 -s:v:0 640x360 -c:v:0 libx264 -b:v:0 365k -s:v:1 1280x720 -c:v:1 libx264 -b:v:1 2000k -c:a copy -var_stream_map "v:0,a:0 v:1,a:1" -master_pl_name master.m3u8 -f hls -hls_time 6 -hls_list_size 0 -hls_segment_filename "/output/v%v/fileSequence%d.ts" /output/v%v/prog_index.m3u8
+  hls_server:
+    image: nginx
+    volumes:
+      - "/home/edsols/Desktop/Project/Docker/video_streaming/hls/:/usr/share/nginx/html"
+      - "/home/edsols/Desktop/Project/Docker/video_streaming/nginx.conf:/etc/nginx/nginx.conf"
+    ports:
+      - "8080:80"
+
+  video_player:
+    image: nginx
+    volumes:
+      - "/home/edsols/Desktop/Project/Docker/video_streaming/player:/usr/share/nginx/html"
+    ports:
+      - "8000:80"
