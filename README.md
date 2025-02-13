@@ -15,5 +15,3 @@ This project enables video streaming in multiple resolutions using **Docker cont
 - Modify `nginx.conf` to adjust streaming settings.
 - Change FFmpeg command in `docker-compose.yml` to include additional resolutions.
 
-## License
-This project is open-source. Feel free to modify and use it as needed.
